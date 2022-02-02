@@ -1,0 +1,10 @@
+.feed{
+    flex: 5.5;
+    overflow-y: scroll;
+    height: 100vh;
+    
+}
+
+.feedWrapper{
+    padding: 20px;
+}
