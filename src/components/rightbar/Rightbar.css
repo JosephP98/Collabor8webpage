@@ -1,3 +1,24 @@
 .rightbar{
-    flex: 3.5;
+    flex: 2.5;
+    height: calc(100vh - 50px);
+    overflow-y: scroll;
+
+}
+
+.rightbarWrapper{
+    padding: 20px 20px 0 0;
+    
+}
+
+::-webkit-scrollbar{
+    width: 0px;
+    
+}
+
+::-webkit-scrollbar-track{
+    background-color: #ffffff;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: rgb(255, 255, 255);
 }

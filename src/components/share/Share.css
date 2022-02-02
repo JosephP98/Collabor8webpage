@@ -47,4 +47,32 @@
 
 .shareOptions{
     display: flex;
+    margin-left: 20px;
+}
+
+.shareOption{
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.shareIcon{
+    font-size: 18px;
+    margin-right: 4px;
+}
+
+.shareOptionText{
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.shareButton{
+    border: none;
+    padding: 7px;
+    border-radius: 5px;
+    background-color: aquamarine;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 200px;
 }
