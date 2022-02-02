@@ -1,10 +1,12 @@
 import React from 'react';
 import "./Sidebar.css";
+import {useNavigate} from 'react-router-dom';
 
 
 
 export default function Sidebar() {
 
+let navigate = useNavigate();
 
   return (
   <div className='sidebar'>
@@ -17,6 +19,8 @@ export default function Sidebar() {
                     </div>
                     
                     <span className="sidebarListItemText">Feed</span>
+
+                    
                 </li>
 
                 <li className="sidebarListItem">
@@ -80,6 +84,7 @@ export default function Sidebar() {
                 <li className="sidebarFriend">
                     <img className='sidebarFriendImg' src="/assets/Jakub.jpg" alt=""/>
                     <span className='sidebarFriendName'>Jakub</span>
+                    <button onClick={() => {navigate('/CanvasPage')}}> click me</button>
                 </li>
 
                 <li className="sidebarFriend">

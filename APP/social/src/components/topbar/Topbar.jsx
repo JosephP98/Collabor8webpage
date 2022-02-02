@@ -1,9 +1,13 @@
 import React from 'react';
 import "./Topbar.css";
-;
+import {useNavigate} from 'react-router-dom';
+
 
 
 export default function Topbar() {
+
+  let navigate = useNavigate();
+
   return <div className='TopbarContainer'>
       <div className="TopbarLeft">
         <span className="logo">Collabor8</span>
@@ -39,7 +43,7 @@ export default function Topbar() {
             </span>
           </div>
         </div>
-        <img src="/assets/me.jpg" alt="" className="topbarImg" />
+        <img onClick={() => {navigate('/Profile')}} src="/assets/me.jpg" alt="" className="topbarImg" />
       </div>
       
   </div>;

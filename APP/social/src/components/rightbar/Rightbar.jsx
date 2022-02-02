@@ -1,6 +1,6 @@
 import React from 'react';
 import './Rightbar.css';
-import Note from '../../Note/Note';
+import Note from '../Note/Note';
 import CreateNote from '../CreateNote/CreateNote';
 
 export default function Rightbar() {
