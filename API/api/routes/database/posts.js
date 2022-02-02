@@ -4,7 +4,7 @@ const router = express.Router();
 require('dotenv').config({ path: '../../../.env' });
 
 const db = require('mysql2');
-<<<<<<< Updated upstream
+
 const db_pool = db.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USR,
@@ -15,10 +15,8 @@ const db_pool = db.createPool({
     connectionLimit: 10,
     queueLimit: 0
 });
-=======
-let users;
->>>>>>> Stashed changes
 
+let users;
 
 router.get('/c', (req, res) => {
     db_pool.query('CREATE TABLE tbl_test (uid INT AUTO_INCREMENT PRIMARY KEY, fnm CHAR(10))', (err, result) => {
@@ -27,16 +25,16 @@ router.get('/c', (req, res) => {
     });
 });
 
-<<<<<<< Updated upstream
+
 router.get('/i', (req, res) => {
     db_pool.query('INSERT INTO tbl_test (fnm) VALUES (\'Jakub\')', (err, result) => {
         if (err) throw err;
         console.log('Values inserted');
     });
-=======
-    return tbl;
-}
 
+    return tbl;
+});
+    
 function rndString(length) {
     let result           = '';
     let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -78,8 +76,8 @@ router.get('/user/all', (req, res) => {
         console.log(result);
         users = result;
     })
->>>>>>> Stashed changes
 });
+
 router.get('/all', (req, res) => {
     db_pool.query('SELECT * FROM tbl_test', (err, result, fields) => {
         if (err) throw err;
