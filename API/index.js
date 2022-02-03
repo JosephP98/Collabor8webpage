@@ -1,8 +1,16 @@
 const express = require('express');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const cors = require('cors');
 
 const app = express();
+app.use(cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+}));
+
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
@@ -19,7 +27,7 @@ const r_db = require('./api/routes/database/posts');
 
 let c; // Make sure to replace this by storing image on DB
 
-// app.use('/api/db', r_db);
+app.use('/api/db', r_db);
 
 app.get('/', (req, res) => {
     res.send("Hello world");
