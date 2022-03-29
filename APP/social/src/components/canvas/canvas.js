@@ -81,7 +81,7 @@ function sketch(p) {
 
   p.mouseReleased = () => {
     let c = document.getElementsByTagName('canvas')[0].toDataURL('image/png');
-    socket.emit('save', { e: c });;
+    socket.emit('save', { e: c });
   }
 }
 

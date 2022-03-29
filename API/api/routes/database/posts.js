@@ -1,9 +1,21 @@
 const express = require('express');
 const router = express.Router();
+<<<<<<< Updated upstream
 
 require('dotenv').config({ path: '../../../.env' });
 
 const db = require('mysql2');
+=======
+const cors = require('cors');
+const db_func = require('../../controllers/database/postController');
+require('dotenv').config({ path: '../../../.env' });
+const { v4: uuidv4 } = require('uuid');
+
+const corsop = cors({
+    origin: "*",
+    methods: "GET, PUT"
+});
+>>>>>>> Stashed changes
 
 const db_pool = db.createPool({
     host: process.env.DB_HOST,
@@ -18,6 +30,7 @@ const db_pool = db.createPool({
 
 let users;
 
+<<<<<<< Updated upstream
 router.get('/c', (req, res) => {
     db_pool.query('CREATE TABLE tbl_test (uid INT AUTO_INCREMENT PRIMARY KEY, fnm CHAR(10))', (err, result) => {
         if (err) throw err;
@@ -35,6 +48,8 @@ router.get('/i', (req, res) => {
     return tbl;
 });
     
+=======
+>>>>>>> Stashed changes
 function rndString(length) {
     let result           = '';
     let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -47,6 +62,10 @@ function rndString(length) {
     return result;
 }
 
+
+router.post('/signup', (req, res) => {
+    db_func.db_sign_up(req, res);
+});
 
 // router.get('/c', (req, res) => {
 //     db_pool.query('CREATE TABLE tbl_test (uid INT AUTO_INCREMENT PRIMARY KEY, fnm CHAR(10))', (err, result) => {
@@ -103,8 +122,10 @@ router.get('/post/new', (req, res) => {
     const rnd = {
         likes: Math.floor(Math.random() * 500),
         path: "https://picsum.photos/200",
+        caption: rndString(30)
     }
 
+<<<<<<< Updated upstream
     const user = users[Math.floor(Math.random() * users.length)]
 
     tbl.query(`insert into posts.posts_tbl (likes, path, author) VALUES ('${rnd.likes}', '${rnd.path}', '${user.username}')`, (err, result, fields) => {
@@ -114,6 +135,51 @@ router.get('/post/new', (req, res) => {
 
     res.send(rnd);
 });
+=======
+    const user = users[Math.floor(Math.random() * users.length)];
+    tbl.query(`insert into posts.posts_tbl (likes, path, author, caption) VALUES ('${rnd.likes}', '${rnd.path}', '${user.username}', '${rnd.caption}')`, (err, result, fields) => {
+        if (err) throw err;
+        console.log(`Values ${rnd.likes}', '${rnd.path}', '${user.username}, '${rnd.caption}' inserted`);
+        res.send(result);
+    });
+});
+// router.post('/post/new/demo', (req, res) => {
+//     console.log(JSON.parse(req));
+//     const tbl = poolConnectionHelper("post");
+//     tbl.query(`insert into posts.posts_tbl (likes, path, author, caption) VALUES ('${req.likes}', '${req.path}', '${req.author}, ${req.caption}')`, (err, result, fields) => {
+//         if (err) throw err;
+//         console.log(`Values ${req.likes}, ${req.path}, ${req.author}, ${req.caption}} inserted`);
+
+//         res.send({
+//             status: 200,
+//             request_type: "POST",
+//             request: {
+//                 likes: req.likes,
+//                 path: req.path,
+//                 author: req.author,
+//                 caption: req.caption
+//             }
+//         });
+//     });
+// });
+
+// router.get('/user/new/joe', (req, res) => {
+//     const tbl = poolConnectionHelper("user");
+//     tbl.query(`insert into user.user_tbl (username, email, password) VALUES ('joe', 'joe@joejoe.co.uk', 'hashed and salted')`, (err, result, fields) => {
+//         if (err) throw err;
+//         console.log(result);
+
+//         res.send({
+//             status: 200,
+//             request_type: "POST",
+//             request: {
+//                 username: "joe",
+//                 email: "joe@joejoe.co.uk"
+//             }
+//         });
+//     });
+// });
+>>>>>>> Stashed changes
 
 // // controllers
 // const posts = require('../database/posts');

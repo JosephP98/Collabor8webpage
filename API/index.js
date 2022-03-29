@@ -1,6 +1,11 @@
 const express = require('express');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+<<<<<<< Updated upstream
+=======
+const cors = require('cors');
+const bp = require('body-parser');
+>>>>>>> Stashed changes
 
 const app = express();
 const httpServer = createServer(app);
@@ -19,7 +24,14 @@ const r_db = require('./api/routes/database/posts');
 
 let c; // Make sure to replace this by storing image on DB
 
+<<<<<<< Updated upstream
 // app.use('/api/db', r_db);
+=======
+app.use(bp.urlencoded({ extended: false }))
+app.use(bp.json())
+
+app.use('/api/db', r_db);
+>>>>>>> Stashed changes
 
 app.get('/', (req, res) => {
     res.send("Hello world");
