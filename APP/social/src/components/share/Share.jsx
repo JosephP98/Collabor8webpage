@@ -1,6 +1,17 @@
 import React from 'react';
 import './Share.css'
 
+// send post to db
+function post(e) {
+    const cap = document.getElementsByClassName("shareInput")[0];
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ likes: 0, path: "https://picsum.photos/200", author: "joe", caption: cap.value})
+    };
+    fetch('http://localhost:3001/api/db/post/new/demo', requestOptions)
+        .then(response => console.log(response.json()));
+}
 export default function Share() {
   return (
     <div className='share'>
@@ -40,7 +51,7 @@ export default function Share() {
                         <span className='shareOptionText'>Go Live</span>
                     </div>
                 </div>
-                <button className='shareButton'>
+                  <button onClick={post} className='shareButton'>
                     Share
                 </button>
             </div>

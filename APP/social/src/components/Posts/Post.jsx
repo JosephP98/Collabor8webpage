@@ -1,14 +1,14 @@
 import React from 'react';
 import './Post.css';
 
-export default function Post() {
+export default function Post(props) {
   return (
     <div className='post'>
         <div className="postWrapper">
             <div className="postTop">
                 <div className="postTopLeft">
                     <img className='postProfileImg' src='/assets/me.jpg' alt ='' />
-                    <span className="postUsername">Joseph Parkinson</span>
+                      <span className="postUsername">{ props.author }</span>
                     <span className="postDate">4 minutes ago</span>
                 </div>
                 <div className="postTopRight">
@@ -18,8 +18,8 @@ export default function Post() {
 
             <div className="postCenter">
                 <span className="postText">
-                    Hey! I hope this works!
-                    <img className='postImg' src='assets/Post1.jpg' alt='' />
+                    { props.caption }
+                      <img className='postImg' src={ props.path } alt='' />
                 </span>
             </div>
 
@@ -33,7 +33,7 @@ export default function Post() {
                         <i class="fas fa-heart"></i>
                     </div>
                     <span className="postLikeCounter">
-                        32 people like this!
+                          { props.likes } people like this!
                     </span>
                 </div>
                 <div className="postBottomRight">

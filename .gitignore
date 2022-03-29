@@ -2,6 +2,11 @@
 
 # dependencies
 /node_modules
+/api/node_modules
+/API/node_modules
+/APP/node_modules
+/APP/social/node_modules
+/APP/canvas/node_modules
 /.pnp
 .pnp.js
 
