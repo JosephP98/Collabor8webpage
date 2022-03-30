@@ -145,10 +145,11 @@ exports.db_edit_profile = (req, res) => {
 exports.server_store_image = (req, res) => {
     const room_uuid = req.params.uuid;
     const data = req.body.img_data;
+
     const f_path = `${path.resolve(process.cwd(), "../Storage/collab/img/" + room_uuid + ".json")}`;
     //console.log(f_path);
 
-    fs.writeFile(f_path, JSON.stringify(data), err => {
+    fs.writeFile(f_path, data, err => {
         if (err) {
             console.log(err);
             throw err;

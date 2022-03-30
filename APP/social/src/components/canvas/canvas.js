@@ -8,12 +8,13 @@ import './canvas.css';
 // TODO : abstract function
 function sketch(p) {
   let socket;
-  let canvas;
+  let img;
   let paintBrushData = {};
   //let inputQue = [];
 
   p.updateWithProps = props => {
     socket = props.socket;
+    img = props.img;
   }
 
   p.draw = () => {
@@ -34,13 +35,12 @@ function sketch(p) {
   }
 
   p.preload = () => {
-    socket.on('load', o => {
-      if (o !== null) {
-        let img = p.loadImage(o.e, () => {
-          p.image(img, 0, 0);
+    console.log(img);
+      if (img !== null) {
+        let c = p.loadImage(img.data, () => {
+          p.image(c, 0, 0);
         });
       }
-    });
   }
 
   p.setup = () => {
@@ -64,36 +64,44 @@ function sketch(p) {
 
   }
 
-  // p.keyPressed = (e) => {
-  //   // check if the event parameter (e) has Z (keycode 90) and ctrl or cmnd
-  //   if (e.keyCode === 90 && (e.ctrlKey || e.metaKey)) {
-  //     let c = document.getElementsByTagName('canvas')[0].toDataURL('image/png');
-  //     console.log(c);
-  //     socket.emit('save', { e: c });
-  //   }
-
-  //   // if (e.keyCode === 88) {
-  //   //   console.log('z');
-  //   //   socket.emit('load', (c) => { console.log(c); });
-  //   // }
-  // }
-
-
   p.mouseReleased = () => {
-    let c = document.getElementsByTagName('canvas')[0].toDataURL('image/png');
-    socket.emit('save', { e: c });
+    const e = document.getElementsByTagName('canvas')[0]
+
+    if (e) {
+      let img = e.toDataURL('image/png');
+      const img_data = JSON.stringify({ data: img });
+      
+      fetch('http://localhost:3001/api/db/collab/868f21e1-d3e2-4bed-92bd-339eace7725b', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify({
+          img_data: img_data
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('saved:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
   }
 }
 
 class Canvas extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {socket: this.props.socket, img: this.props.img};
   }
 
   render() {
+    const { socket, img } = this.state;
     return (
-      <ReactP5Wrapper sketch={sketch} socket={this.props.socket}/>
+      <ReactP5Wrapper sketch={sketch} socket={socket} img={img}/>
     )
   }
 }
