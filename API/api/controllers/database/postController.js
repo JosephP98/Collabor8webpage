@@ -28,7 +28,9 @@ exports.db_sign_up = (req, res) => {
     bcrypt.hash(pass, saltr, function (err, hash) {
         if (!err) {
             db_pool.getConnection((err, con) => {
-                if (err) { throw err; }
+                if (err) {
+                    throw err;
+                }
 
                 con.beginTransaction(err => {
                 if (err) { throw err; }
@@ -60,6 +62,39 @@ exports.db_sign_up = (req, res) => {
         console.log(err);
     });
 };
+
+exports.db_login = (req, res) => {
+    const email = req.body.email;
+    const pass = req.body.password;
+
+    bcrypt.hash(pass, saltr, function (err, hash) { 
+        if (err) {
+            throw err;
+        }
+
+        db_pool.query(`SELECT uuid, password FROM account WHERE email = \"${email}\"`, (err, eres) => {
+            if (err) {
+                throw err;
+            }
+
+            if (eres.length === 1) {
+                bcrypt.compare(pass, eres[0].password, (err, hres) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    if (hres) {
+                        res.send({ uuid: eres[0].uuid });
+                    } else {
+                        res.send({ err: "no match" });
+                    }
+                });
+            } else {
+                res.send({ err: "no match" });
+            }
+        });
+    });
+}
 
 // Create Room
 exports.db_create_room = (req, res) => {

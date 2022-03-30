@@ -4,7 +4,7 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 const app = express();
 const bp = require('body-parser');
-const db_func = require('./api/controllers/database/postController');
+//const db_func = require('./api/controllers/database/postController');
 
 app.use(bp.urlencoded({extended: false}));
 app.use(bp.json());
