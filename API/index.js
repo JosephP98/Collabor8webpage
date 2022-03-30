@@ -2,8 +2,13 @@ const express = require('express');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-
 const app = express();
+const bp = require('body-parser');
+const db_func = require('./api/controllers/database/postController');
+
+app.use(bp.urlencoded({extended: false}));
+app.use(bp.json());
+
 app.use(cors({
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -18,17 +23,16 @@ const io = new Server(httpServer, {
     }
 });
 
-require('dotenv').config()
+require('dotenv').config();
 
-const port = process.env.SRVR_PORT | 3001
+const port = process.env.SRVR_PORT | 3001;
 
 // routes
 const r_db = require('./api/routes/database/posts');
-
-let c; // Make sure to replace this by storing image on DB
-
 app.use('/api/db', r_db);
 
+// -> 643502d2-b545-429b-b9a2-b4c569079fa0
+let c; // Make sure to replace this by storing image on DB
 app.get('/', (req, res) => {
     res.send("Hello world");
 });
@@ -49,7 +53,8 @@ io.on('connection', (socket) => {
     socket.on('save', obj => {
         console.log('saved');
         //console.log(obj);
-        c = obj;
+        //db_func.server_store_image(req, res);
+        // TODO: change to work without socket.io
     });
 
     socket.emit('load', c);

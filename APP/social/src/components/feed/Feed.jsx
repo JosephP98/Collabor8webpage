@@ -7,11 +7,11 @@ export default function Feed() {
   const [posts, setPosts] = useState([]);
   let temp;
   useEffect(() => {
-    fetch('http://localhost:3001/api/db/post/all', { method: 'GET', mode: 'cors' })
+    fetch('http://localhost:3001/api/db/feed', { method: 'GET', mode: 'cors' })
       .then(res => res.json())
       .then(res => {
         temp = res.map(data => {
-          return React.createElement(Post, { author: data.author, caption: data.caption !== null ? data.caption : "", path: data.path, likes: data.likes });
+          return React.createElement(Post, { author: data.authors, caption: data.title !== null ? data.title : "", likes: data.likes });
         });
 
         setPosts(temp);

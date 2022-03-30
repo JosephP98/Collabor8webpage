@@ -1,45 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const cors = require('cors');
+const db_func = require('../../controllers/database/postController');
 
 const corsop = cors({
     origin: "*",
     methods: "GET, PUT"
-})
+});
 
 require('dotenv').config({ path: '../../../.env' });
 
-const db = require('mysql2');
-
 let users;
-
-function poolConnectionHelper(table) {
-    let use_table;
-
-    switch (table) {
-        case "user":
-            use_table = process.env.DB_USER
-            break;
-        case "post":
-            use_table = process.env.DB_POSTS
-            break;
-        default:
-            use_table = process.env.DB_TEST
-    }
-
-    const tbl = db.createPool({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USR,
-        password: process.env.DB_PASS,
-        port: process.env.DB_PORT,
-        database: use_table,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0
-    });
-
-    return tbl;
-}
 
 function rndString(length) {
     let result           = '';
@@ -53,6 +24,35 @@ function rndString(length) {
     return result;
 }
 
+// User
+router.post('/signup', (req, res) => {
+    db_func.db_sign_up(req, res);
+});
+
+router.post('/:uuid/create', (req, res) => {
+    db_func.db_create_room(req, res);
+});
+
+router.post('/:uuid/update', (req, res) => {
+    db_func.db_edit_profile(req, res);
+});
+
+
+// Posts/Feed
+router.get('/feed', (req, res) => {
+    db_func.db_get_feed(req, res);
+});
+
+// Room
+// save image
+router.post('/collab/:uuid', (req, res) => {
+    db_func.server_store_image(req, res);
+});
+
+// get image
+router.get('/collab/:uuid', (req, res) => {
+    db_func.server_retrieve_image(req, res);
+});
 
 // router.get('/c', (req, res) => {
 //     db_pool.query('CREATE TABLE tbl_test (uid INT AUTO_INCREMENT PRIMARY KEY, fnm CHAR(10))', (err, result) => {
