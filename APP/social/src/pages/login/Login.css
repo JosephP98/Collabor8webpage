@@ -1,0 +1,87 @@
+.login{
+    width: 100vw;
+    height: 100vh;
+    background-color: #0d921fef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loginWrapper{
+    width: 70%;
+    height: 70%;
+    display: flex;
+    background-color: #f0f2f5;
+
+}
+
+.loginLeft, .loginRight{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.loginPicture{
+    font-weight: 850;
+    font-size: 50px;
+    color: #0d921fef;
+    margin-bottom: 10px;
+}
+
+.loginDescription{
+    font-size: 25px;
+}
+
+.loginBox{
+    height: 300px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.logintext{
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    font-size: 18px;
+    padding-left: 20px;
+}
+
+.logintext:focus{
+    outline: none;
+}
+
+
+.loginButton{
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: #0d921fef;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+
+}
+
+.forgotPass{
+    text-align: center;
+    color: #0d921fef;
+}
+
+.newAccButton{
+    width: 50%;
+    align-self: center;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: #0d921fef;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}

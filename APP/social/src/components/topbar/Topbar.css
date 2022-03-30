@@ -22,6 +22,11 @@
 
 }
 
+.loginlink{
+    cursor: pointer;
+}
+
+
 .TopbarCenter{
     flex: 5;
    

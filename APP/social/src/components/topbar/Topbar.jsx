@@ -11,6 +11,7 @@ export default function Topbar() {
   return <div className='TopbarContainer'>
       <div className="TopbarLeft">
         <span className="logo">Collabor8</span>
+        <span className="loginlink" onClick={() => {navigate('/Login')}}>Login</span>
       </div>
       <div className="TopbarCenter">
         <div className="searchbar">
@@ -20,7 +21,7 @@ export default function Topbar() {
       </div>
       <div className="TopbarRight">
         <div className="topbarLinks">
-          <span className="topbarLink">Homepage</span>
+        <span className="topbarLink" onClick={() => {navigate('/')}}>Homepage</span>
           <span className="topbarLink">Timeline</span>
         </div>
         <div className="topbarIcons">
