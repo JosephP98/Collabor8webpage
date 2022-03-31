@@ -8,13 +8,17 @@ import './canvas.css';
 // TODO : abstract function
 function sketch(p) {
   let socket;
-  let img;
+  let uuid;
   let paintBrushData = {};
   //let inputQue = [];
 
   p.updateWithProps = props => {
     socket = props.socket;
-    img = props.img;
+    uuid = props.uuid;
+
+    let c = p.loadImage(props.img.data, () => {
+      p.image(c, 0, 0);
+    });
   }
 
   p.draw = () => {
@@ -34,14 +38,7 @@ function sketch(p) {
     });
   }
 
-  p.preload = () => {
-    console.log(img);
-      if (img !== null) {
-        let c = p.loadImage(img.data, () => {
-          p.image(c, 0, 0);
-        });
-      }
-  }
+  p.preload = () => {  }
 
   p.setup = () => {
     p.createCanvas(500, 500);
@@ -70,8 +67,9 @@ function sketch(p) {
     if (e) {
       let img = e.toDataURL('image/png');
       const img_data = JSON.stringify({ data: img });
+      //console.log('http://localhost:3001/api/db/collab/' + uuid);
       
-      fetch('http://localhost:3001/api/db/collab/868f21e1-d3e2-4bed-92bd-339eace7725b', {
+      fetch('http://localhost:3001/api/db/collab/' + uuid, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -81,10 +79,6 @@ function sketch(p) {
           img_data: img_data
         })
       })
-        .then(response => response.json())
-        .then(data => {
-          console.log('saved:', data);
-        })
         .catch((error) => {
           console.error('Error:', error);
         });
@@ -95,13 +89,13 @@ function sketch(p) {
 class Canvas extends Component {
   constructor(props) {
     super(props);
-    this.state = {socket: this.props.socket, img: this.props.img};
+    this.state = {socket: this.props.socket, img: this.props.img, uuid: this.props.uuid};
   }
 
   render() {
-    const { socket, img } = this.state;
+    const { socket, img, uuid } = this.state;
     return (
-      <ReactP5Wrapper sketch={sketch} socket={socket} img={img}/>
+      <ReactP5Wrapper sketch={sketch} socket={socket} img={img} uuid={uuid}/>
     )
   }
 }

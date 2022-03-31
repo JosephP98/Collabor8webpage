@@ -122,6 +122,12 @@ exports.db_create_room = (req, res) => {
                 }
             });
 
+            con.query(`INSERT INTO post (uuid, img, title) VALUES (\"${uuidv4()}\", \"${room_uuid}\", \"${room_name}\")`, (err, result) => {
+                if (err) {
+                    con.rollback(err => { throw err; });
+                }
+            });
+
             con.commit(err => {
                 if (err) {
                     con.rollback(err => { throw err; });
@@ -199,16 +205,22 @@ exports.server_retrieve_image = (req, res) => {
     const f_path = `${path.resolve(process.cwd(), "../Storage/collab/img/" + room_uuid + ".json")}`;
     //console.log(f_path);
 
-    fs.readFile(f_path, 'utf8', (err, data) => {
-        if (err) {
-            console.log(req.body.img_data);
-            console.log(err);
-            throw err;
-        }
 
-        res.send(data);
+    fs.access(f_path, fs.constants.F_OK, (err) => {
+        if (!err) {
+            fs.readFile(f_path, 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+
+                res.send(data);
+            });
+        } else {
+            res.send({ data: null });
+        }
     });
-};
+}
 
 exports.server_store_chat = (req, res) => {
     const room_uuid = req.params.uuid;
@@ -242,13 +254,13 @@ exports.server_retrieve_chat = (req, res) => {
     });
 };
 
-exports.db_get_feed = (req, res) => {
-    db_pool.query("SELECT * FROM post", (err, results) => {
-        if (err) {
-            console.log(err);
-            throw err;
-        }
+    exports.db_get_feed = (req, res) => {
+        db_pool.query("SELECT * FROM post", (err, results) => {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
 
-        res.send(results);
-    });
-}
+            res.send(results);
+        });
+    };

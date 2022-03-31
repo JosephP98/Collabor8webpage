@@ -43,6 +43,11 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log(`user ${socket.id} connected`);
 
+    socket.on('join', o => {
+        console.log("joinning " + o.room);
+        socket.join(o.room);
+    });
+
     socket.on('line', obj => {
         //console.log(obj);
         socket.emit('line', obj);

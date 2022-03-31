@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react'
+import {useNavigate} from 'react-router-dom';
 import './Share.css'
 
 // send post to db
@@ -13,12 +14,39 @@ function post(e) {
         .then(response => console.log(response.json()));
 }
 export default function Share() {
+    const navigate = useNavigate();
+    const [title, setTitle] = useState();
+
+    const submit = () => {
+        if (title) {
+            const uuid = localStorage.getItem('uuid');
+            fetch('http://localhost:3001/api/db/' + uuid + '/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors',
+                body: JSON.stringify({
+                    room_name: title
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('created:', data);
+                    navigate('/CanvasPage', { state: { uuid: data } });
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+    }
+
   return (
     <div className='share'>
         <div className="shareWrapper">
             <div className="shareTop">
                 <img className='shareProfileImg' src='/assets/me.jpg' alt=''/>
-                <input placeholder='Share something you have made Joe!' className='shareInput' />    
+                <input placeholder='Share something you have made Joe!' className='shareInput' onChange={e => setTitle(e.target.value)}/>    
             </div>
             <hr className='shareHr'/>
             <div className="shareBottom">
@@ -51,8 +79,8 @@ export default function Share() {
                         <span className='shareOptionText'>Go Live</span>
                     </div>
                 </div>
-                  <button onClick={post} className='shareButton'>
-                    Share
+                  <button onClick={submit} className='shareButton'>
+                    Create
                 </button>
             </div>
         </div>
