@@ -16,7 +16,7 @@ export default function Feed() {
 
         setPosts(temp);
       });
-}, []);
+}, [posts]);
   
   return (
     <div className='feed'>

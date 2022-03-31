@@ -140,6 +140,58 @@ exports.db_create_room = (req, res) => {
     });
 };
 
+exports.db_join_room = (req, res) => {
+    const user_uuid = req.body.user_uuid;
+    const room_uuid = req.params.uuid;
+    const uuid = uuidv4();
+    const equal = (e) => e.user_uuid === user_uuid;
+
+    db_pool.getConnection((err, con) => {
+        if (err) { throw err; }
+
+        con.beginTransaction(err => {
+            if (err) { throw err; }
+
+            con.query(`SELECT user_uuid FROM rooms WHERE room_uuid = \"${room_uuid}\"`, (err, result) => {
+                if (err) {
+                    con.rollback(err => { throw err; })
+                };
+
+                console.log(result.findIndex(equal));
+                console.log(result.findIndex(equal) === -1);
+
+                if (result.findIndex(equal) === -1) {
+                    // add to contributors
+                    con.query(`INSERT INTO rooms (uuid, user_uuid, room_uuid) VALUES (\"${uuid}\", \"${user_uuid}\", \"${room_uuid}\")`, (err, result) => {
+                        if (err) {
+                            throw err;
+                        }
+
+                        //console.log(result);
+                    });
+
+                    con.query(`UPDATE post SET collabs = collabs + 1 WHERE img = \"${room_uuid}\"`, (err, result) => {
+                        if (err) {
+                            throw err;
+                        }
+
+                        //console.log(result);
+                    });
+                }
+
+                con.commit(err => {
+                        if (err) {
+                            con.rollback(err => { throw err; });
+                        }
+                        
+                        console.log("transaction completed...");
+                        res.send(result);
+                    });
+            });
+        });
+    });
+};
+
 // TODO: PLACE IN PUT
 exports.db_edit_profile = (req, res) => {
     const user_uuid = req.params.uuid;

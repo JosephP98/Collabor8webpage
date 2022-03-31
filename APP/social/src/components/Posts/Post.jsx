@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import {useNavigate} from 'react-router-dom';
 import './Post.css';
 
 export default function Post(props) {
+    const navigate = useNavigate();
     const [img, setImg] = useState();
 
     useEffect(() => {
@@ -11,6 +13,28 @@ export default function Post(props) {
             .then(res => { setImg(res.data) })
             .catch(err => { throw err });
     });
+
+        function contribute() {
+        const user_uuid = localStorage.getItem("uuid");
+        fetch('http://localhost:3001/api/db/' + props.img + '/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors',
+                body: JSON.stringify({
+                    user_uuid: user_uuid
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    //console.log('joinning room:' + JSON.stringify(data) + ' user: ' + user_uuid);
+                    navigate('/CanvasPage', { state: { uuid: {uuid_v4: props.img } } });
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+    }
 
   return (
       <div id={props.id} className='post'>
@@ -47,10 +71,11 @@ export default function Post(props) {
                     </span>
                 </div>
                 <div className="postBottomRight">
-                    <span className="postCommentText">
+                      <span className="postCommentText">
                           { props.collabs } people contributed
                     </span>
-                </div>
+                  </div>
+                  <button onClick={contribute}>Contribute</button>
             </div>
 
         </div>

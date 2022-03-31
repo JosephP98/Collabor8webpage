@@ -37,6 +37,10 @@ router.post('/:uuid/create', (req, res) => {
     db_func.db_create_room(req, res);
 });
 
+router.post('/:uuid/join', (req, res) => {
+    db_func.db_join_room(req, res);
+});
+
 router.post('/:uuid/update', (req, res) => {
     db_func.db_edit_profile(req, res);
 });
