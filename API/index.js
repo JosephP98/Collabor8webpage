@@ -4,7 +4,7 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 const app = express();
 const bp = require('body-parser');
-const db_func = require('./api/controllers/database/postController');
+//const db_func = require('./api/controllers/database/postController');
 
 app.use(bp.urlencoded({extended: false}));
 app.use(bp.json());
@@ -19,7 +19,10 @@ app.use(cors({
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: "*"
+        origin: "*",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        preflightContinue: false,
+        optionsSuccessStatus: 204
     }
 });
 
@@ -39,6 +42,11 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     console.log(`user ${socket.id} connected`);
+
+    socket.on('join', o => {
+        console.log("joinning " + o.room);
+        socket.join(o.room);
+    });
 
     socket.on('line', obj => {
         //console.log(obj);

@@ -10,13 +10,13 @@ export default function Feed() {
     fetch('http://localhost:3001/api/db/feed', { method: 'GET', mode: 'cors' })
       .then(res => res.json())
       .then(res => {
-        temp = res.map(data => {
-          return React.createElement(Post, { author: data.authors, caption: data.title !== null ? data.title : "", likes: data.likes });
+        temp = res.reverse().map(data => {
+          return React.createElement(Post, { likes: data.likes, title: data.title !== null ? data.title : "", img: data.img, collabs: data.collabs, key: data.id });
         });
 
         setPosts(temp);
       });
-}, []);
+}, [posts]);
   
   return (
     <div className='feed'>
@@ -26,3 +26,4 @@ export default function Feed() {
       </div>
     </div>);
 }
+

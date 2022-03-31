@@ -29,8 +29,16 @@ router.post('/signup', (req, res) => {
     db_func.db_sign_up(req, res);
 });
 
+router.post('/login', (req, res) => {
+    db_func.db_login(req, res);
+});
+
 router.post('/:uuid/create', (req, res) => {
     db_func.db_create_room(req, res);
+});
+
+router.post('/:uuid/join', (req, res) => {
+    db_func.db_join_room(req, res);
 });
 
 router.post('/:uuid/update', (req, res) => {

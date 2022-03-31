@@ -28,7 +28,9 @@ exports.db_sign_up = (req, res) => {
     bcrypt.hash(pass, saltr, function (err, hash) {
         if (!err) {
             db_pool.getConnection((err, con) => {
-                if (err) { throw err; }
+                if (err) {
+                    throw err;
+                }
 
                 con.beginTransaction(err => {
                 if (err) { throw err; }
@@ -61,6 +63,39 @@ exports.db_sign_up = (req, res) => {
     });
 };
 
+exports.db_login = (req, res) => {
+    const email = req.body.email;
+    const pass = req.body.password;
+
+    bcrypt.hash(pass, saltr, function (err, hash) { 
+        if (err) {
+            throw err;
+        }
+
+        db_pool.query(`SELECT uuid, password FROM account WHERE email = \"${email}\"`, (err, eres) => {
+            if (err) {
+                throw err;
+            }
+
+            if (eres.length === 1) {
+                bcrypt.compare(pass, eres[0].password, (err, hres) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    if (hres) {
+                        res.send({ uuid: eres[0].uuid });
+                    } else {
+                        res.send({ err: "no match" });
+                    }
+                });
+            } else {
+                res.send({ err: "no match" });
+            }
+        });
+    });
+}
+
 // Create Room
 exports.db_create_room = (req, res) => {
     const room_uuid = uuidv4();
@@ -87,6 +122,12 @@ exports.db_create_room = (req, res) => {
                 }
             });
 
+            con.query(`INSERT INTO post (uuid, img, title) VALUES (\"${uuidv4()}\", \"${room_uuid}\", \"${room_name}\")`, (err, result) => {
+                if (err) {
+                    con.rollback(err => { throw err; });
+                }
+            });
+
             con.commit(err => {
                 if (err) {
                     con.rollback(err => { throw err; });
@@ -94,6 +135,58 @@ exports.db_create_room = (req, res) => {
             
                 console.log("transaction completed...");
                 res.send({ uuid_v4: room_uuid });
+            });
+        });
+    });
+};
+
+exports.db_join_room = (req, res) => {
+    const user_uuid = req.body.user_uuid;
+    const room_uuid = req.params.uuid;
+    const uuid = uuidv4();
+    const equal = (e) => e.user_uuid === user_uuid;
+
+    db_pool.getConnection((err, con) => {
+        if (err) { throw err; }
+
+        con.beginTransaction(err => {
+            if (err) { throw err; }
+
+            con.query(`SELECT user_uuid FROM rooms WHERE room_uuid = \"${room_uuid}\"`, (err, result) => {
+                if (err) {
+                    con.rollback(err => { throw err; })
+                };
+
+                console.log(result.findIndex(equal));
+                console.log(result.findIndex(equal) === -1);
+
+                if (result.findIndex(equal) === -1) {
+                    // add to contributors
+                    con.query(`INSERT INTO rooms (uuid, user_uuid, room_uuid) VALUES (\"${uuid}\", \"${user_uuid}\", \"${room_uuid}\")`, (err, result) => {
+                        if (err) {
+                            throw err;
+                        }
+
+                        //console.log(result);
+                    });
+
+                    con.query(`UPDATE post SET collabs = collabs + 1 WHERE img = \"${room_uuid}\"`, (err, result) => {
+                        if (err) {
+                            throw err;
+                        }
+
+                        //console.log(result);
+                    });
+                }
+
+                con.commit(err => {
+                        if (err) {
+                            con.rollback(err => { throw err; });
+                        }
+                        
+                        console.log("transaction completed...");
+                        res.send(result);
+                    });
             });
         });
     });
@@ -145,10 +238,11 @@ exports.db_edit_profile = (req, res) => {
 exports.server_store_image = (req, res) => {
     const room_uuid = req.params.uuid;
     const data = req.body.img_data;
+
     const f_path = `${path.resolve(process.cwd(), "../Storage/collab/img/" + room_uuid + ".json")}`;
     //console.log(f_path);
 
-    fs.writeFile(f_path, JSON.stringify(data), err => {
+    fs.writeFile(f_path, data, err => {
         if (err) {
             console.log(err);
             throw err;
@@ -163,16 +257,22 @@ exports.server_retrieve_image = (req, res) => {
     const f_path = `${path.resolve(process.cwd(), "../Storage/collab/img/" + room_uuid + ".json")}`;
     //console.log(f_path);
 
-    fs.readFile(f_path, 'utf8', (err, data) => {
-        if (err) {
-            console.log(req.body.img_data);
-            console.log(err);
-            throw err;
-        }
 
-        res.send(data);
+    fs.access(f_path, fs.constants.F_OK, (err) => {
+        if (!err) {
+            fs.readFile(f_path, 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err);
+                    throw err;
+                }
+
+                res.send(data);
+            });
+        } else {
+            res.send({ data: null });
+        }
     });
-};
+}
 
 exports.server_store_chat = (req, res) => {
     const room_uuid = req.params.uuid;
@@ -206,13 +306,13 @@ exports.server_retrieve_chat = (req, res) => {
     });
 };
 
-exports.db_get_feed = (req, res) => {
-    db_pool.query("SELECT * FROM post", (err, results) => {
-        if (err) {
-            console.log(err);
-            throw err;
-        }
+    exports.db_get_feed = (req, res) => {
+        db_pool.query("SELECT * FROM post", (err, results) => {
+            if (err) {
+                console.log(err);
+                throw err;
+            }
 
-        res.send(results);
-    });
-}
+            res.send(results);
+        });
+    };

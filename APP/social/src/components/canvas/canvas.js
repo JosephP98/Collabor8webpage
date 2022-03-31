@@ -8,12 +8,17 @@ import './canvas.css';
 // TODO : abstract function
 function sketch(p) {
   let socket;
-  let canvas;
+  let uuid;
   let paintBrushData = {};
   //let inputQue = [];
 
   p.updateWithProps = props => {
     socket = props.socket;
+    uuid = props.uuid;
+
+    let c = p.loadImage(props.img.data, () => {
+      p.image(c, 0, 0);
+    });
   }
 
   p.draw = () => {
@@ -33,15 +38,7 @@ function sketch(p) {
     });
   }
 
-  p.preload = () => {
-    socket.on('load', o => {
-      if (o !== null) {
-        let img = p.loadImage(o.e, () => {
-          p.image(img, 0, 0);
-        });
-      }
-    });
-  }
+  p.preload = () => {  }
 
   p.setup = () => {
     p.createCanvas(500, 500);
@@ -64,36 +61,41 @@ function sketch(p) {
 
   }
 
-  // p.keyPressed = (e) => {
-  //   // check if the event parameter (e) has Z (keycode 90) and ctrl or cmnd
-  //   if (e.keyCode === 90 && (e.ctrlKey || e.metaKey)) {
-  //     let c = document.getElementsByTagName('canvas')[0].toDataURL('image/png');
-  //     console.log(c);
-  //     socket.emit('save', { e: c });
-  //   }
-
-  //   // if (e.keyCode === 88) {
-  //   //   console.log('z');
-  //   //   socket.emit('load', (c) => { console.log(c); });
-  //   // }
-  // }
-
-
   p.mouseReleased = () => {
-    let c = document.getElementsByTagName('canvas')[0].toDataURL('image/png');
-    socket.emit('save', { e: c });
+    const e = document.getElementsByTagName('canvas')[0]
+
+    if (e) {
+      let img = e.toDataURL('image/png');
+      const img_data = JSON.stringify({ data: img });
+      //console.log('http://localhost:3001/api/db/collab/' + uuid);
+      
+      fetch('http://localhost:3001/api/db/collab/' + uuid, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify({
+          img_data: img_data
+        })
+      })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
   }
 }
 
 class Canvas extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {socket: this.props.socket, img: this.props.img, uuid: this.props.uuid};
   }
 
   render() {
+    const { socket, img, uuid } = this.state;
     return (
-      <ReactP5Wrapper sketch={sketch} socket={this.props.socket}/>
+      <ReactP5Wrapper sketch={sketch} socket={socket} img={img} uuid={uuid}/>
     )
   }
 }
