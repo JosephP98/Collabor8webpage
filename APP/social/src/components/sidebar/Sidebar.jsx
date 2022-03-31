@@ -84,7 +84,7 @@ let navigate = useNavigate();
                 <li className="sidebarFriend">
                     <img className='sidebarFriendImg' src="/assets/Jakub.jpg" alt=""/>
                     <span className='sidebarFriendName'>Jakub</span>
-                    <button onClick={() => {navigate('/CanvasPage')}}> click me</button>
+                    <button onClick={() => {navigate('Draw')}}> click me</button>
                 </li>
 
                 <li className="sidebarFriend">

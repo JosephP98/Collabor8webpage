@@ -1,0 +1,16 @@
+.messages{
+    height: calc(100vh - 70px);
+    display: flex;
+}
+
+.chatMenu{
+    flex: 3.25;
+}
+
+.chatMenu{
+    flex: 5.75;
+}
+
+.chatMenu{
+    flex: 3;
+}

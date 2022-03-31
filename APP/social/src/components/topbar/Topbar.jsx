@@ -32,7 +32,7 @@ export default function Topbar() {
             </span>
           </div>
           <div className="topbarIconItem">
-            <i class="fas fa-comment"></i>
+            <i class="fas fa-comment"onClick={() => {navigate('/Messages')}}></i>
             <span className="topbarIconBadge">
               2
             </span>
