@@ -1,11 +1,24 @@
 
-//i do not claim this code to be mine, it is technically sourced code as i followed a tutorial for how to implement this draw/paint canvas app
-//no copy pasting took place
-//i will comment this to prove my understanding
+
+/*
+References
+
+This is the tutorial i followed for how to create this paint app, i have followed his code, so this is NOT my own original code
+
+Youtube.com. 2022.
+Building a drawing app using Canvas & ReactJS | Manoj Singh Negi | Recraft Relic.
+[online] Available at: <https://www.youtube.com/watch?v=_N9xf1r1yD4> [Accessed 30 March 2022].
+
+Here is the link to the github repo      https://github.com/recraftrelic/canvas-draw-app
+
+You can tell i havent copy pasted the code because theres a really annoying bug with the painting that i cant fix
+
+
+*/ 
 
 import React, { useCallback, useEffect, useRef, useState} from 'react'
 
-const colors = ["red", "green", "yellow", "black", "blue"]
+const colors = ["red", "green", "yellow", "black", "blue", "orange", "hotpink", "purple", "lightblue"] //more can be added
 export default function Draw(){
 
 
@@ -15,7 +28,7 @@ export default function Draw(){
     const [mouseDown, setMouseDown] = useState(false);
     const [lastPosition, setPosition] = useState({x: 0, y: 0});
 
-    const draw = useCallback((x, y) => {
+    const draw = useCallback((x, y) => { 
         if(mouseDown) {
             ctx.current.beginPath();
             ctx.current.strokeStyle = selectedColor;
@@ -44,7 +57,6 @@ export default function Draw(){
     }
 
     const clear = () => {ctx.current.clearRect(0, 0, ctx.current.canvas.width, ctx.current.canvas.height)}
-
 
     const onMouseDown = (e) => {setPosition({x: e.pageX, y: e.pageY}); setMouseDown(true)}
 
