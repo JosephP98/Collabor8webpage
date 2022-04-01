@@ -15,7 +15,7 @@ You can tell i havent copy pasted the code because theres a really annoying bug 
 
 
 */ 
-
+import {useNavigate} from 'react-router-dom';
 import React, { useCallback, useEffect, useRef, useState} from 'react'
 
 const colors = ["red", "green", "yellow", "black", "blue", "orange", "hotpink", "purple", "lightblue"] //more can be added
@@ -27,6 +27,8 @@ export default function Draw(){
     const [selectedColor, setSelectedColor] = useState(colors[0])
     const [mouseDown, setMouseDown] = useState(false);
     const [lastPosition, setPosition] = useState({x: 0, y: 0});
+
+    let navigate = useNavigate();
 
     const draw = useCallback((x, y) => { 
         if(mouseDown) {
@@ -94,6 +96,7 @@ export default function Draw(){
 
         <button onClick={clear}>Clear</button>
         <button onClick={download}>Download</button>
+        <button onClick={() => {navigate('/')}}>Home</button>
 
     </div>
   );
